@@ -1,0 +1,40 @@
+.navbar{
+    padding:24px 84px;
+    background-color: #F5F7FF;
+}
+.navbar-brand {
+    color: #3D5AD3;
+    font-size: 28px;
+}
+.input-group{
+    padding:12px;
+}
+.bi-search{
+    padding-left: 2px;
+    padding-top: 2px;
+    font-size: 20px;
+}
+.bi-person-circle{
+    color: #242424;
+    font-size: 40px;
+}
+.form-search{
+    width: 495px;
+    height: 48px;
+}
+.navBtnBlue{
+    border-radius: 8px;
+    width: 86px;
+    height: 36px;
+    font-size:14px;
+    color:#FFFFFF;
+    background-color: #3D5AD3;
+}
+.form-control{
+    width: 118px;
+    height: 23px;
+    color: #949CAD;
+}
+.form-control:focus {
+    box-shadow: none;
+}
