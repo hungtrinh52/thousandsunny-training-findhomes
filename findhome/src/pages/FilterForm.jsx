@@ -3,7 +3,8 @@ import Nav from './Nav/Nav.jsx';
 import './css/findHome.css';
 import React, { Component } from 'react';
 import TextInput from "../component/TextInput.jsx";
-import CheckBoxInput from "../component/CheckBoxInput.jsx";
+import CheckBoxBtnInput from "../component/CheckBoxBtnInput.jsx";
+import ButtonInput from "../component/ButtonInput.jsx";
 import RangeInput from "../component/RangeInput.jsx";
 import DateInput from "../component/DateInput.jsx";
 import listLocation from '../data/dataLocation.js';
@@ -11,7 +12,6 @@ import listBtnFavourite from '../data/dataFavourite.js';
 import listPhanLoai from '../data/DataPhanLoai.js';
 import listStt from '../data/dataStatus.js';
 import listData from '../data/ListData.js';
-import CheckBoxBtnInput from "../component/ButtonInput.jsx";
 
 class FindHomes extends Component {
     constructor(props) {
@@ -20,62 +20,36 @@ class FindHomes extends Component {
             filters: {
                 keyWord: null,
                 streetName: null,
-                viTri: null,
+                viTri: [],
                 giaChao: { min: null, max: null },
                 donGia: { min: null, max: null },
                 dienTich: { min: null, max: null },
                 matTien: { min: null, max: null },
-                phanLoai: null,
-                phanLoaiNgoaiTru: null,
-                yeuThich: null,
-                trangThai: null,
-                ngayTao : {min : null, max: null}
+                phanLoai: [],
+                phanLoaiNgoaiTru: [],
+                yeuThich: [],
+                trangThai: [],
+                ngayTao: { min: null, max: null }
             }
         };
     }
 
-    filterConfig = {
-        keyWord: { propKey: 'keyWord', transform: (value) => (value ? value.trim() : null) },
-        streetName: { propKey: 'streetName', transform: (value) => (value ? value.trim() : null) },
-        viTri: { propKey: 'viTri', transform: (value) => value },
-        giaChao: { propKey: 'giaChao', transform: (min, max) => (min || max ? { min, max } : null) },
-        donGia: { propKey: 'donGia', transform: (min, max) => (min || max ? { min, max } : null) },
-        dienTich: { propKey: 'dienTich', transform: (min, max) => (min || max ? { min, max } : null) },
-        matTien: { propKey: 'matTien', transform: (min, max) => (min || max ? { min, max } : null) },
-        phanLoai: { propKey: 'phanLoai', transform: (value) => value || [] },
-        phanLoaiNgoaiTru: { propKey: 'phanLoaiNgoaiTru', transform: (value) => value },
-        yeuThich: { propKey: 'yeuThich', transform: (value) => value },
-        trangThai: { propKey: 'trangThai', transform: (value) => value },
-        ngayTao: {propKey:'ngayTao',transform:(min,max) => (min || max ? { min, max } : null) }
+    handleDateChange = (newValue) => {
+        this.setState((prevState) => ({
+            filters: {
+                ...prevState.filters,
+                ngayTao: newValue
+            }
+        }));
     };
 
-    handleFilterChange = (propKey, ...values) => {
-        const config = this.filterConfig[propKey];
-        if (config) {
-            const transformedValue = config.transform(...values);
-            console.log(`Updating ${propKey} with:`, transformedValue);
-            this.setState((prevState) => {
-                if (['phanLoai', 'phanLoaiNgoaiTru', 'yeuThich', 'trangThai'].includes(config.propKey)) {
-                    const currentValue = prevState.filters[config.propKey] || [];
-                    let newValue = transformedValue;
-                    if (Array.isArray(transformedValue)) {
-                        newValue = [...new Set([...currentValue, ...transformedValue])];
-                    }
-                    return {
-                        filters: {
-                            ...prevState.filters,
-                            [config.propKey]: newValue
-                        }
-                    };
-                }
-                return {
-                    filters: {
-                        ...prevState.filters,
-                        [config.propKey]: transformedValue
-                    }
-                };
-            });
-        }
+    handleCheckBoxChange = (propKey, value) => {
+        this.setState((prevState) => ({
+            filters: {
+                ...prevState.filters,
+                [propKey]: value
+            }
+        }));
     };
 
     handleSubmit = (e) => {
@@ -105,7 +79,9 @@ class FindHomes extends Component {
                                     fieldTitle="Từ khóa"
                                     hintText="Nhập từ khóa"
                                     fieldValue={filters.keyWord}
-                                    onChanged={(value) => this.handleFilterChange('keyWord', value)}
+                                    onChanged={(value) => this.setState((prevState) => ({
+                                        filters: { ...prevState.filters, keyWord: value }
+                                    }))}
                                 />
                             </div>
 
@@ -114,18 +90,17 @@ class FindHomes extends Component {
                                     fieldTitle="Ngày tạo"
                                     fieldValue={filters.ngayTao}
                                     to="Đến"
-                                    onChanged={(min,max)=>this.handleFilterChange("ngayTao",min,max)}
+                                    onChanged={this.handleDateChange}
                                 />
-
                             </div>
 
                             <div className="d-flex flex-wrap">
                                 <span className="input-group-text border-0">Vị trí</span>
-                                <CheckBoxInput
+                                <CheckBoxBtnInput
                                     fieldTitle=""
                                     allTags={listLocation}
                                     current={filters.viTri}
-                                    onChanged={(value) => this.handleFilterChange('viTri', value)}
+                                    onChanged={(value) => this.handleCheckBoxChange('viTri', value)}
                                 />
                             </div>
 
@@ -134,7 +109,9 @@ class FindHomes extends Component {
                                     fieldTitle=""
                                     hintText="Nhập tên đường"
                                     fieldValue={filters.streetName}
-                                    onChanged={(value) => this.handleFilterChange('streetName', value)}
+                                    onChanged={(value) => this.setState((prevState) => ({
+                                        filters: { ...prevState.filters, streetName: value }
+                                    }))}
                                 />
                             </div>
 
@@ -146,7 +123,9 @@ class FindHomes extends Component {
                                     to="Đến"
                                     fieldValueMin={filters.giaChao?.min}
                                     fieldValueMax={filters.giaChao?.max}
-                                    onChanged={(min, max) => this.handleFilterChange('giaChao', min, max)}
+                                    onChanged={(min, max) => this.setState((prevState) => ({
+                                        filters: { ...prevState.filters, giaChao: { min, max } }
+                                    }))}
                                 />
                             </div>
 
@@ -157,7 +136,7 @@ class FindHomes extends Component {
                                         fieldTitle=""
                                         allTags={listPhanLoai}
                                         current={filters.phanLoai}
-                                        onChanged={(value) => this.handleFilterChange('phanLoai', value)}
+                                        onChanged={(value) => this.handleCheckBoxChange('phanLoai', value)}
                                     />
                                 </div>
                                 <span className="input-group-text border-0">Ngoại trừ</span>
@@ -166,7 +145,7 @@ class FindHomes extends Component {
                                         fieldTitle=""
                                         allTags={listPhanLoai}
                                         current={filters.phanLoaiNgoaiTru}
-                                        onChanged={(value) => this.handleFilterChange('phanLoaiNgoaiTru', value)}
+                                        onChanged={(value) => this.handleCheckBoxChange('phanLoaiNgoaiTru', value)}
                                     />
                                 </div>
                             </div>
@@ -178,7 +157,7 @@ class FindHomes extends Component {
                                         fieldTitle=""
                                         allTags={listBtnFavourite}
                                         current={filters.yeuThich}
-                                        onChanged={(value) => this.handleFilterChange('yeuThich', value)}
+                                        onChanged={(value) => this.handleCheckBoxChange('yeuThich', value)}
                                     />
                                 </div>
                             </div>
@@ -190,7 +169,7 @@ class FindHomes extends Component {
                                         fieldTitle=""
                                         allTags={listStt}
                                         current={filters.trangThai}
-                                        onChanged={(value) => this.handleFilterChange('trangThai', value)}
+                                        onChanged={(value) => this.handleCheckBoxChange('trangThai', value)}
                                     />
                                 </div>
                             </div>
@@ -203,7 +182,9 @@ class FindHomes extends Component {
                                     to="Đến"
                                     fieldValueMin={filters.donGia?.min}
                                     fieldValueMax={filters.donGia?.max}
-                                    onChanged={(min, max) => this.handleFilterChange('donGia', min, max)}
+                                    onChanged={(min, max) => this.setState((prevState) => ({
+                                        filters: { ...prevState.filters, donGia: { min, max } }
+                                    }))}
                                 />
                             </div>
 
@@ -215,7 +196,9 @@ class FindHomes extends Component {
                                     to="Đến"
                                     fieldValueMin={filters.dienTich?.min}
                                     fieldValueMax={filters.dienTich?.max}
-                                    onChanged={(min, max) => this.handleFilterChange('dienTich', min, max)}
+                                    onChanged={(min, max) => this.setState((prevState) => ({
+                                        filters: { ...prevState.filters, dienTich: { min, max } }
+                                    }))}
                                 />
                             </div>
 
@@ -227,7 +210,9 @@ class FindHomes extends Component {
                                     to="Đến"
                                     fieldValueMin={filters.matTien?.min}
                                     fieldValueMax={filters.matTien?.max}
-                                    onChanged={(min, max) => this.handleFilterChange('matTien', min, max)}
+                                    onChanged={(min, max) => this.setState((prevState) => ({
+                                        filters: { ...prevState.filters, matTien: { min, max } }
+                                    }))}
                                 />
                             </div>
                         </div>

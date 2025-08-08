@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="App.jsx" type="NodeJSConfigurationType" editBeforeRun="true" singleton="false" path-to-node="$PROJECT_DIR$/findhome/src/App.jsx" path-to-js-file="findhome/package.json" working-dir="$PROJECT_DIR$">
+    <EXTENSION ID="com.jetbrains.nodejs.run.NodeJSProfilingRunConfigurationExtension">
+      <profiling one-log-file="true" />
+    </EXTENSION>
+    <EXTENSION ID="com.jetbrains.nodejs.run.NodeStartBrowserRunConfigurationExtension">
+      <browser name="98ca6316-2f89-46d9-a9e5-fa9e2b0625b3" />
+    </EXTENSION>
+    <method v="2" />
+  </configuration>
+</component>

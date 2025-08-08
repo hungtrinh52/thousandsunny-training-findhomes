@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
+/*import 'react-datepicker/dist/react-datepicker.css';*/
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 class DateInput extends Component {
@@ -9,7 +8,6 @@ class DateInput extends Component {
         super(props);
         this.handleMinChange = this.handleMinChange.bind(this);
         this.handleMaxChange = this.handleMaxChange.bind(this);
-
     }
 
     handleMinChange(dateMin) {
