@@ -99,6 +99,7 @@ class FindHomes extends Component {
                                     fieldTitle="Từ khóa"
                                     hintText="Nhập từ khóa"
                                     fieldValue={filters.keyWord}
+                                    maxLength={100}
                                     onChanged={(value) => this.setState((prevState) => ({
                                         filters: { ...prevState.filters, keyWord: value }
                                     }))}
@@ -129,6 +130,7 @@ class FindHomes extends Component {
                                     fieldTitle=""
                                     hintText="Nhập tên đường"
                                     fieldValue={filters.streetName}
+                                    maxLength={100}
                                     onChanged={(value) => this.setState((prevState) => ({
                                         filters: { ...prevState.filters, streetName: value }
                                     }))}

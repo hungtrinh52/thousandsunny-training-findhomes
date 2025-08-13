@@ -5,32 +5,45 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 class TextInput extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            value: props.fieldValue || ''
+        };
         this.handleChange = this.handleChange.bind(this);
     }
 
-    callOnChanged(value) {
-        const { onChanged } = this.props;
-        onChanged?.(value);
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if (nextProps.fieldValue !== prevState.value) {
+            return { value: nextProps.fieldValue || '' };
+        }
+        return null;
     }
 
     handleChange(e) {
-        this.callOnChanged(e.target.value);
+        const { maxLength = 100, onChanged } = this.props;
+        const value = e.target.value;
+        if (value.length <= maxLength) {
+            this.setState({ value }, () => {
+                onChanged?.(value);
+            });
+        } else {
+            console.log(`Maximum length of ${maxLength} characters exceeded`);
+        }
     }
 
     render() {
-        const { fieldTitle, hintText, fieldValue } = this.props;
+        const { fieldTitle, hintText } = this.props;
+        const { value } = this.state;
+
         return (
-            <div className="d-flex ">
-                <span className="input-group-text border-0"> {fieldTitle}</span>
-                <div className="input-group">
-                    <input
-                        type="text"
-                        className="form-control"
-                        placeholder={hintText}
-                        value={fieldValue || ''}
-                        onChange={this.handleChange}
-                    />
-                </div>
+            <div className="input-group align-items-center">
+                {fieldTitle && <span className="input-group-text border-0">{fieldTitle}</span>}
+                <input
+                    type="text"
+                    className="form-control"
+                    value={value}
+                    placeholder={hintText}
+                    onChange={this.handleChange}
+                />
             </div>
         );
     }
@@ -40,7 +53,8 @@ TextInput.propTypes = {
     fieldTitle: PropTypes.string,
     hintText: PropTypes.string,
     fieldValue: PropTypes.string,
+    maxLength: PropTypes.number,
     onChanged: PropTypes.func
 };
 
-export default React.memo(TextInput );
+export default React.memo(TextInput);
