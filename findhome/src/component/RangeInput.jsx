@@ -11,16 +11,12 @@ class NumberFilter extends Component {
 
   callOnChanged(value) {
     const { onChanged } = this.props;
-    let newMin, newMax;
-    try {
-      newMin = value.min.trim() ? Number(value.min) : undefined;
-    } catch {}
-    try {
-      newMax = value.max.trim() ? Number(value.max) : undefined;
-    } catch {}
+
+    const newMin = (value.min?.trim()) ? Number(value.min) : undefined;
+    const newMax = (value.max?.trim()) ? Number(value.max) : undefined;
+
     onChanged?.(newMin, newMax);
   }
-
   handleMinChange(e) {
     const { fieldValueMax } = this.props;
     this.callOnChanged({ min: e.target.value, max: fieldValueMax?.toString() || '' });

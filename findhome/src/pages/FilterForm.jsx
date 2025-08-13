@@ -3,8 +3,8 @@ import Nav from './Nav/Nav.jsx';
 import './css/findHome.css';
 import React, { Component } from 'react';
 import TextInput from "../component/TextInput.jsx";
-import CheckBoxBtnInput from "../component/CheckBoxBtnInput.jsx";
-import ButtonInput from "../component/ButtonInput.jsx";
+import CheckBoxBtnInput from "../component/ButtonInput.jsx";
+import CheckBoxInput from "../component/CheckBoxInput.jsx";
 import RangeInput from "../component/RangeInput.jsx";
 import DateInput from "../component/DateInput.jsx";
 import listLocation from '../data/dataLocation.js';
@@ -32,6 +32,7 @@ class FindHomes extends Component {
                 ngayTao: { min: null, max: null }
             }
         };
+
     }
 
     handleDateChange = (newValue) => {
@@ -54,12 +55,31 @@ class FindHomes extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-        console.log('Submit filter:', this.state.filters);
+        console.log('Form data:', this.state.filters);
     };
 
+    handleReset = () => {
+        this.setState({
+            filters: {
+                keyWord: null,
+                streetName: null,
+                viTri: [],
+                giaChao: { min: null, max: null },
+                donGia: { min: null, max: null },
+                dienTich: { min: null, max: null },
+                matTien: { min: null, max: null },
+                phanLoai: [],
+                phanLoaiNgoaiTru: [],
+                yeuThich: [],
+                trangThai: [],
+                ngayTao: { min: null, max: null }
+            }
+        }, () => console.log('State reset to:', this.state.filters));
+    };
     render() {
-        const { filters } = this.state;
 
+        const { filters } = this.state;
+        console.log('Render with filters:', filters);
         return (
             <div>
                 <Nav />
@@ -96,7 +116,7 @@ class FindHomes extends Component {
 
                             <div className="d-flex flex-wrap">
                                 <span className="input-group-text border-0">Vị trí</span>
-                                <CheckBoxBtnInput
+                                <CheckBoxInput
                                     fieldTitle=""
                                     allTags={listLocation}
                                     current={filters.viTri}
@@ -219,7 +239,7 @@ class FindHomes extends Component {
 
                         <div className="button-group d-flex justify-content-center mt-3">
                             <button className="btn btnWhile">Lưu bộ lọc</button>
-                            <button className="btn btnWhile">Làm mới</button>
+                            <button className="btn btnWhile " onClick={this.handleReset}>Làm mới</button>
                             <button className="btn btnBlue" type="submit">Xác nhận</button>
                         </div>
                     </form>

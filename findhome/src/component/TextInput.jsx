@@ -10,8 +10,7 @@ class TextInput extends Component {
 
     callOnChanged(value) {
         const { onChanged } = this.props;
-        const trimmedValue = value.trim();
-        onChanged?.(trimmedValue || null);
+        onChanged?.(value);
     }
 
     handleChange(e) {

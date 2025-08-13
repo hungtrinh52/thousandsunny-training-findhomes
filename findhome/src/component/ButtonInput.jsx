@@ -5,28 +5,43 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 class CheckBoxBtnInput extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            selected: props.current || []
+        };
         this.handleTagChange = this.handleTagChange.bind(this);
     }
 
-    handleTagChange(tag) {
-        const { current, allTags, onChanged } = this.props;
-        const newSelected = [...(current || [])];
-        const index = newSelected.indexOf(tag);
-
-        if (index !== -1) {
-            newSelected.splice(index, 1);
-        } else {
-            newSelected.push(tag);
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if (nextProps.current !== prevState.selected) {
+            return { selected: nextProps.current || [] };
         }
+        return null;
+    }
 
-        const isAllSelected = newSelected.length === allTags.length;
-        const valueToSend = isAllSelected ? null : newSelected;
+    handleTagChange(tag) {
+        const { allTags, onChanged } = this.props;
+        this.setState((prevState) => {
+            const newSelected = [...prevState.selected];
+            const index = newSelected.indexOf(tag);
 
-        onChanged?.(valueToSend);
+            if (index !== -1) {
+                newSelected.splice(index, 1);
+            } else {
+                newSelected.push(tag);
+            }
+
+            const isAllSelected = newSelected.length === allTags.length;
+            const valueToSend = isAllSelected ? null : newSelected;
+
+            console.log('CheckBoxBtnInput sending:', valueToSend);
+            onChanged?.(valueToSend);
+            return { selected: newSelected };
+        });
     }
 
     render() {
-        const { fieldTitle, allTags, current } = this.props;
+        const { fieldTitle, allTags } = this.props;
+        const { selected } = this.state;
 
         return (
             <div className="d-flex flex-column">
@@ -34,7 +49,7 @@ class CheckBoxBtnInput extends Component {
                 <div className="btn-group" role="group">
                     {allTags.map((tag) => {
                         const tagText = tag.toString();
-                        const isSelected = (current || []).includes(tag);
+                        const isSelected = selected.includes(tag);
 
                         return (
                             <label

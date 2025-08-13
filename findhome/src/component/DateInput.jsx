@@ -1,69 +1,82 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-/*import 'react-datepicker/dist/react-datepicker.css';*/
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 class DateInput extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            min: props.fieldValue?.min || '',
+            max: props.fieldValue?.max || ''
+        };
         this.handleMinChange = this.handleMinChange.bind(this);
         this.handleMaxChange = this.handleMaxChange.bind(this);
     }
 
-    handleMinChange(dateMin) {
-        const { fieldValue, onChanged } = this.props;
-        const max = fieldValue?.max || null;
-        if (dateMin && max && dateMin >= max) {
-            dateMin = new Date(max.getTime() - 24 * 60 * 60 * 1000);
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if (nextProps.fieldValue?.min !== prevState.min || nextProps.fieldValue?.max !== prevState.max) {
+            return {
+                min: nextProps.fieldValue?.min || '',
+                max: nextProps.fieldValue?.max || ''
+            };
         }
-        onChanged?.(dateMin, max);
+        return null;
     }
 
-    handleMaxChange(dateMax) {
-        const { fieldValue, onChanged } = this.props;
-        const min = fieldValue?.min || null;
-        if (dateMax && min && dateMax <= min) {
-            dateMax = new Date(min.getTime() + 24 * 60 * 60 * 1000);
+    handleMinChange(date) {
+        const { max } = this.state;
+        if (max && date && new Date(date) > new Date(max)) {
+            console.log('Min date cannot be greater than max date');
+            return;
         }
-        onChanged?.(dateMax,min);
+        this.setState({ min: date }, () => {
+            this.props.onChanged?.({ min: date, max });
+        });
     }
 
+    handleMaxChange(date) {
+        const { min } = this.state;
+        if (min && date && new Date(date) < new Date(min)) {
+            console.log('Max date cannot be less than min date');
+            return;
+        }
+        this.setState({ max: date }, () => {
+            this.props.onChanged?.({ min, max: date });
+        });
+    }
 
     render() {
-        const { fieldTitle, fieldValue,to } = this.props;
-        const minValue = fieldValue?.min ? fieldValue.min.toISOString().split('T')[0] : '';
-        const maxValue = fieldValue?.max ? fieldValue.max.toISOString().split('T')[0] : '';
+        const { fieldTitle, to } = this.props;
+        const { min, max } = this.state;
 
         return (
-            <div className="d-flex">
-                <span className="input-group-text border-0"> {fieldTitle}</span>
-                <div className="input-group">
-                    <input
-                        type="Date"
-                        className="form-control"
-                        value={minValue}
-                        onChange={(e) => this.handleMinChange(new Date(e.target.value))}
-                    />
-                    <span className="input-group-text border-0">{to}</span>
-                    <input
-                        type="date"
-                        className="form-control"
-                        value={maxValue}
-                        onChange={(e) => this.handleMaxChange(new Date(e.target.value))}
-                    />
-                </div>
+            <div className="d-flex align-items-center">
+                {fieldTitle && <span className="input-group-text border-0">{fieldTitle}</span>}
+                <input
+                    type="date"
+                    className="form-control input-group"
+                    value={min}
+                    onChange={(e) => this.handleMinChange(e.target.value)}
+                />
+                {to && <span className="mx-2">{to}</span>}
+                <input
+                    type="date"
+                    className="form-control input-group"
+                    value={max}
+                    onChange={(e) => this.handleMaxChange(e.target.value)}
+                />
             </div>
         );
     }
 }
-
+    
 DateInput.propTypes = {
     fieldTitle: PropTypes.string,
-    to: PropTypes.string,
     fieldValue: PropTypes.shape({
-        min: PropTypes.instanceOf(Date),
-        max: PropTypes.instanceOf(Date)
+        min: PropTypes.string,
+        max: PropTypes.string
     }),
+    to: PropTypes.string,
     onChanged: PropTypes.func
 };
 
