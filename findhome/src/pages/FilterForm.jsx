@@ -12,6 +12,7 @@ import listBtnFavourite from '../data/dataFavourite.js';
 import listPhanLoai from '../data/DataPhanLoai.js';
 import listStt from '../data/dataStatus.js';
 import listData from '../data/ListData.js';
+import listSavedFilter from "../data/savedListFilter.js";
 
 class FindHomes extends Component {
     constructor(props) {
@@ -75,6 +76,15 @@ class FindHomes extends Component {
                 ngayTao: { min: null, max: null }
             }
         }, () => console.log('State reset to:', this.state.filters));
+    };
+
+    handleSaveFilter = () => {
+        const { filters } = this.state;
+        const maxId = listSavedFilter.reduce((max, filter) => Math.max(max, filter.id || -1), -1);
+        const newId = maxId + 1;
+        const newFilter = { ...filters, id: newId };
+        listSavedFilter.push(newFilter);
+        console.log('Saved filters:', listSavedFilter);
     };
     render() {
 
@@ -240,7 +250,7 @@ class FindHomes extends Component {
                         </div>
 
                         <div className="button-group d-flex justify-content-center mt-3">
-                            <button className="btn btnWhile">Lưu bộ lọc</button>
+                            <button className="btn btnWhile" onClick={this.handleSaveFilter}>Lưu bộ lọc</button>
                             <button className="btn btnWhile " onClick={this.handleReset}>Làm mới</button>
                             <button className="btn btnBlue" type="submit">Xác nhận</button>
                         </div>
