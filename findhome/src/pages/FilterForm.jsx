@@ -11,8 +11,10 @@ import listLocation from '../data/dataLocation.js';
 import listBtnFavourite from '../data/dataFavourite.js';
 import listPhanLoai from '../data/DataPhanLoai.js';
 import listStt from '../data/dataStatus.js';
-import listData from '../data/ListData.js';
+
 import listSavedFilter from "../data/savedListFilter.js";
+import listCardLiked from "../data/listCardLiked.js";
+import listData from "../data/ListData.js";
 
 class FindHomes extends Component {
     constructor(props) {
@@ -31,6 +33,9 @@ class FindHomes extends Component {
                 yeuThich: [],
                 trangThai: [],
                 ngayTao: { min: null, max: null }
+            },
+            card: {
+                likedItems :[]
             }
         };
 
@@ -86,6 +91,20 @@ class FindHomes extends Component {
         listSavedFilter.push(newFilter);
         console.log('Saved filters:', listSavedFilter);
     };
+
+    handleLikeItems = (itemLike) => {
+        const isLiked = listCardLiked.some(liked => liked.id === itemLike.id);
+            if(isLiked){
+                const index = listCardLiked.findIndex(item => item.id === itemLike.id);
+                    if(index > -1) {
+                        listCardLiked.splice(index,1);
+                    }
+
+            }else {
+                listCardLiked.push(itemLike);
+            }
+    };
+
     render() {
 
         const { filters } = this.state;
@@ -253,19 +272,20 @@ class FindHomes extends Component {
                             <button className="btn btnWhile" onClick={this.handleSaveFilter}>Lưu bộ lọc</button>
                             <button className="btn btnWhile " onClick={this.handleReset}>Làm mới</button>
                             <button className="btn btnBlue" type="submit">Xác nhận</button>
+                            <button className="btn btnWhile">Liked</button>
                         </div>
                     </form>
                 </div>
                 <div className="cardHome container p-0 row">
-                    {listData.map((listData) => (
-                        <div className="card col-auto p-0">
-                            <img src={`${listData.sImg}`} className="card-img-top" alt="" />
+                    {listData.map((item) => (
+                        <div className="card col-auto p-0" key={item.id}>
+                            <img src={`${item.sImg}`} className="card-img-top" alt="" />
                             <div className="btn-icon">
-                                <button className="btn btn-light rounded-circle">
-                                    <i className="bi bi-eye-slash btnIcon"></i>
+                                <button className="btn btn-light rounded-circle" onClick={()=>this.handleLikeItems(item)}>
+                                    <i className="bi bi-heart btnIcon"></i>
                                 </button>
                                 <button className="btn btn-light rounded-circle">
-                                    <i className="bi bi-eye-slash btnIcon"></i>
+                                    <i className="bi bi-feather btnIcon"></i>
                                 </button>
                                 <button className="btn btn-light rounded-circle">
                                     <i className="bi bi-eye-slash btnIcon"></i>
@@ -273,18 +293,18 @@ class FindHomes extends Component {
                             </div>
                             <div className="card-body">
                                 <h5 className="card-title">
-                                    <a className="link" href="#">{listData.sMota}</a>
+                                    <a className="link" href="#">{item.sMota}</a>
                                 </h5>
                                 <div className="cardText">
                                     <p className="card-text">
                                         <i className="bi bi-geo-alt-fill iconCard"></i>
-                                        {listData.sDuongPho}, {listData.sTenQuan}
+                                        {item.sDuongPho}, {item.sTenQuan}
                                     </p>
                                 </div>
                                 <div className="cardTextBtn align-items-center">
                                     <div className="d-flex justify-content-start">
                                         <i className="bi bi-map iconCard"></i>
-                                        <p className="card-text">{listData.iDienTich}m2</p>
+                                        <p className="card-text">{item.iDienTich}m2</p>
                                     </div>
                                     <button type="button" className="btn btn-secondary">Chuẩn</button>
                                 </div>
@@ -293,21 +313,21 @@ class FindHomes extends Component {
                                         <i className="bi bi-stopwatch iconCard"></i>
                                         <p className="card-text">Ngày tạo</p>
                                     </div>
-                                    <p className="card-text">{listData.dNgayTao}</p>
+                                    <p className="card-text">{item.dNgayTao}</p>
                                 </div>
                                 <div className="cardText">
                                     <div className="d-flex justify-content-start">
                                         <i className="bi bi-calendar iconCard"></i>
                                         <p className="card-text">Ngày sửa</p>
                                     </div>
-                                    <p className="card-text">{listData.updated_at}</p>
+                                    <p className="card-text">{item.updated_at}</p>
                                 </div>
                                 <div className="cardText">
                                     <div className="d-flex justify-content-start">
                                         <i className="bi bi-currency-dollar iconCard"></i>
-                                        <p className="card-text textPrice">{listData.sGiaChaoHopDong}</p>
+                                        <p className="card-text textPrice">{item.sGiaChaoHopDong}</p>
                                     </div>
-                                    <p className="card-text">{listData.iDienTich}</p>
+                                    <p className="card-text">{item.iDienTich}</p>
                                 </div>
                             </div>
                         </div>
