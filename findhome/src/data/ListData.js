@@ -1,6 +1,6 @@
 import Property from "../models/Property.js";
 const listData = [
-    {   ...Property,
+     Object.assign(new Property(),{
         id: "PROP001",
         standard: "standard",
         bBank: true,
@@ -93,9 +93,8 @@ const listData = [
         x_sort_dia_chi: "0001.0002.0003",
         x_sort_dia_chi_exists: true,
         x_sort_duong_pho_exists: false
-    },
-    {
-        ...Property,
+    }),
+    Object.assign(new Property(),{
         id: "PROP002",
         standard: "premium",
         bBank: true,
@@ -186,9 +185,8 @@ const listData = [
         x_sort_dia_chi: "0010.0020.0030",
         x_sort_dia_chi_exists: true,
         x_sort_duong_pho_exists: true
-    },
-    {
-        ...Property,
+    }),
+    Object.assign( new Property(),{
         id: "PROP003",
         standard: "standard",
         bBank: false,
@@ -269,7 +267,7 @@ const listData = [
         x_sort_dia_chi: "0040.0050.0060",
         x_sort_dia_chi_exists: false,
         x_sort_duong_pho_exists: false
-    }
+    })
 
 ];
 export default listData;
